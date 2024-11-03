@@ -103,7 +103,7 @@ const ViewStats = () => {
     //getStats is called whenever the player1Selection changes
     useEffect(() => {
         getStats();
-    }, [player1Selection]);
+    }, [player1Selection, player2Selection]);
 
     const handleDrag = (playerId, e) => {
         const selectedCharacter = calculateSlot(e.clientX, e.clientY);
@@ -135,9 +135,16 @@ const ViewStats = () => {
     const getStats = async () => {
         if (isAuthenticated && player1Selection) {
             const token = await getAccessTokenSilently();
+            const params = { characterName: player1Selection.name };
+            
+            // if player 2 is selected, add their character to the params
+            if (player2Selection) {
+                params.opponentCharacter = player2Selection.name;
+            }
+
             const response = await axios.get(
                 `${process.env.REACT_APP_API_URL}/api/character-stats`, {
-                    params: { characterName: player1Selection.name },
+                    params: params,
                     headers: {
                         Authorization: `Bearer ${token}`,
                         'Content-Type': 'application/json'
@@ -145,13 +152,14 @@ const ViewStats = () => {
                 }
             );
 
+            //if either wins or losses are null, that means the matchup hasn't happend, so set the stats to 0
             if (response.data.wins == null || response.data.losses == null) {
                 setStats({wins: 0, losses: 0});
             } else {
                 setStats(response.data);
             }
         }
-    }
+    };
 
     if (!isAuthenticated) {
         navigate('/login');
@@ -163,7 +171,7 @@ const ViewStats = () => {
 
         <div className="add-match-container">
             <button onClick={() => navigate('/home')}>Back</button>
-            <h1 className="page-title">Select Characters</h1>
+            <h1 className="page-title">View Stats</h1>
             
             <div className="selected-characters">
                 <div className="player-selection">
