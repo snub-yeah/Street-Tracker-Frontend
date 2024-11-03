@@ -1,0 +1,72 @@
+.match-card {
+    background-color: #333;
+    border: 3px solid #ffd700;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 300px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s;
+}
+
+.match-card:hover {
+    transform: translateY(-5px);
+}
+
+.match-card p {
+    color: #ffffff;
+    margin: 8px 0;
+    font-size: 1.1rem;
+}
+
+.match-card p.result-win {
+    color: #4CAF50;  /* green for win */
+}
+
+.match-card p.result-loss {
+    color: #f44336;  /* red for loss */
+}
+
+.view-match-container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.matches-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.matches-title {
+    color: #ffffff;
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.matches-subtitle {
+    color: #ffd700;
+    text-align: center;
+    font-size: 1.5rem;
+    margin-bottom: 30px;
+}
+
+.character-image {
+    width: 100px;
+    height: 100px;
+    padding: 10px;
+}
+
+.result-text {
+    font-size: 1.2rem;
+    margin-top: 10px;
+}

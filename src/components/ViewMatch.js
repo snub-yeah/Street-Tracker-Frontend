@@ -47,11 +47,14 @@ const ViewMatch = () => {
 
     return (
         <div className="view-match-container">
-            <h1>Your Matches</h1>
-            <h2>Total Matches: {totalMatches}</h2>
-            {matches.map(match => (
-                <MatchCard key={match.match_id} match={match} />
-            ))}
+            <button className="back-button" onClick={() => navigate('/home')}>Back</button>
+            <h1 className="matches-title">Your Matches</h1>
+            <h2 className="matches-subtitle">Total Matches: {totalMatches}</h2>
+            <div className="matches-grid">
+                {matches.map(match => (
+                    <MatchCard key={match.match_id} match={match} />
+                ))}
+            </div>
         </div>
     );
 }

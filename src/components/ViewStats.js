@@ -29,7 +29,7 @@ const ViewStats = () => {
     const [player1Hover, setPlayer1Hover] = useState(null);
     const [player2Hover, setPlayer2Hover] = useState(null);
     const [stats, setStats] = useState({wins: 0, losses: 0});
-    //declare the character and their images
+    //declare an array of character objects containing id, name, and image
     const characters = [
         {id: 1, name: "Ryu", image: Ryu},
         {id: 2, name: "E. Honda", image: Honda},
@@ -49,6 +49,7 @@ const ViewStats = () => {
         {id: 16, name: "M. Bison", image: MBison},
     ]
 
+    //TODO: Change it to where only player1 selects a character and it lists all the character stats for that character
     const calculateSlot = (x, y, isDragData = false) => {
         const grid = document.querySelector('.character-select-grid');
         if (!grid) return null;
@@ -161,6 +162,7 @@ const ViewStats = () => {
         }
     };
 
+    //if the user is not authenticated, navigate to the login page
     if (!isAuthenticated) {
         navigate('/login');
         return null;
@@ -215,8 +217,10 @@ const ViewStats = () => {
 
             <div className="character-stats">
                 <h2>Character Stats</h2>
+                <p>Total Matches: {stats.wins + stats.losses}</p>
                 <p>Wins: {stats.wins}</p>
                 <p>Losses: {stats.losses}</p>
+                <p>Win Percentage: {((stats.wins / (stats.wins + stats.losses)) * 100 || 0).toFixed(2)}%</p>
             </div>
             
             <div className="character-select-grid">
