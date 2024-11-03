@@ -11,6 +11,7 @@ const LoggedInHome = () => {
     }
 
     if (!isAuthenticated) {
+        //if not authenticated, take them back!!!
         navigate('/login');
         return null;
     }

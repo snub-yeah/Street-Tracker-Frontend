@@ -15,12 +15,16 @@ const ViewMatch = () => {
             if (isAuthenticated) {
                 try {
                     const token = await getAccessTokenSilently();
+                    //set a response variable with all the returned matches
                     const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/matches`, {
                         headers: {
+                            //add our auth token
                             Authorization: `Bearer ${token}`,
                             'Content-Type': 'application/json'
                         }
                     });
+
+                    //this request returns a map of string and object
                     setMatches(response.data.matches);
                     setTotalMatches(response.data.totalMatches);
                 } catch (error) {
@@ -28,7 +32,7 @@ const ViewMatch = () => {
                 }
             }
         };
-
+        
         fetchMatches();
     }, [isAuthenticated, getAccessTokenSilently]);
 

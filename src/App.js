@@ -7,6 +7,7 @@ import LoginPage from './components/LoginPage.js';
 import LoggedInHome from './components/LoggedInHome.js';
 import AddMatch from './components/AddMatch.js';
 import ViewMatch from './components/ViewMatch.js';
+import ViewStats from './components/ViewStats.js';
 
 const ProtectedRoute = ({ children }) => {
     const { isAuthenticated, isLoading } = useAuth0();
@@ -48,6 +49,7 @@ function App() {
                         />
                         <Route path="/add-match" element={<AddMatch />} />
                         <Route path="/view-match" element={<ViewMatch />} />
+                        <Route path="/stats" element={<ViewStats />} />
                     </Routes>
                 </div>
             </Router>
