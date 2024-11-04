@@ -18,7 +18,7 @@ const LoggedInHome = () => {
 
     return (
         <div>
-            <h1>Welcome, {user.name}!</h1>
+            <h1 className="homeTitle">Welcome, {user.name}!</h1>
             <div>
                 <button onClick={() => navigate('/add-match')}>Add Match</button>
                 <button onClick={() => navigate('/view-match')}>View Matches</button>

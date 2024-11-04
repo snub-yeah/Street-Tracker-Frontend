@@ -10,7 +10,7 @@ const HomeText = () => {
 
     return (
         <div>
-            <h1>Street Tracker</h1>
+            <h1 className="homeTitle">Street Tracker</h1>
             <button onClick={handleBeginClick}>Begin</button>
         </div>
     );

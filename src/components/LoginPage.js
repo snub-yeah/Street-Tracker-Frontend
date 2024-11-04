@@ -46,7 +46,7 @@ const LoginPage = () => {
     if (!isAuthenticated) {
         return (
             <div>
-                <h1>Login Page</h1>
+                <h1 className="homeTitle">Login Page</h1>
                 <button onClick={() => loginWithRedirect()}>Sign in with Google</button>
             </div>
         );
