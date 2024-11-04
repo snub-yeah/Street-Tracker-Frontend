@@ -19,16 +19,17 @@ import FeiLong from './images/feilong.gif';
 import Deejay from './images/deejay.gif';
 import Cammy from './images/cammy.gif';
 import MBison from './images/mbison.gif';
-import './Styles/AddMatch.css';
+import './Styles/ViewStats.css';
 
 const ViewStats = () => {
     const navigate = useNavigate();
     const { user, isAuthenticated, isLoading, getAccessTokenSilently } = useAuth0();
     const [player1Selection, setPlayer1Selection] = useState(null);
-    const [player2Selection, setPlayer2Selection] = useState(null);
     const [player1Hover, setPlayer1Hover] = useState(null);
-    const [player2Hover, setPlayer2Hover] = useState(null);
-    const [stats, setStats] = useState({wins: 0, losses: 0});
+    const [stats, setStats] = useState({
+        overall: { wins: 0, losses: 0 },
+        matchups: {}
+    });
     //declare an array of character objects containing id, name, and image
     const characters = [
         {id: 1, name: "Ryu", image: Ryu},
@@ -49,7 +50,7 @@ const ViewStats = () => {
         {id: 16, name: "M. Bison", image: MBison},
     ]
 
-    //TODO: Change it to where only player1 selects a character and it lists all the character stats for that character
+    
     const calculateSlot = (x, y, isDragData = false) => {
         const grid = document.querySelector('.character-select-grid');
         if (!grid) return null;
@@ -104,7 +105,7 @@ const ViewStats = () => {
     //getStats is called whenever the player1Selection changes
     useEffect(() => {
         getStats();
-    }, [player1Selection, player2Selection]);
+    }, [player1Selection]);
 
     const handleDrag = (playerId, e) => {
         const selectedCharacter = calculateSlot(e.clientX, e.clientY);
@@ -112,8 +113,6 @@ const ViewStats = () => {
         if (selectedCharacter) {
             if (playerId === 1) {
                 setPlayer1Hover(selectedCharacter);
-            } else {
-                setPlayer2Hover(selectedCharacter);
             }
         }
     };
@@ -126,9 +125,6 @@ const ViewStats = () => {
             if (playerId === 1) {
                 setPlayer1Selection(selectedCharacter);
                 setPlayer1Hover(null);
-            } else {
-                setPlayer2Selection(selectedCharacter);
-                setPlayer2Hover(null);
             }
         }
     };
@@ -136,16 +132,11 @@ const ViewStats = () => {
     const getStats = async () => {
         if (isAuthenticated && player1Selection) {
             const token = await getAccessTokenSilently();
-            const params = { characterName: player1Selection.name };
             
-            // if player 2 is selected, add their character to the params
-            if (player2Selection) {
-                params.opponentCharacter = player2Selection.name;
-            }
-
-            const response = await axios.get(
+            // Get overall stats first
+            const overallResponse = await axios.get(
                 `${process.env.REACT_APP_API_URL}/api/character-stats`, {
-                    params: params,
+                    params: { characterName: player1Selection.name },
                     headers: {
                         Authorization: `Bearer ${token}`,
                         'Content-Type': 'application/json'
@@ -153,12 +144,35 @@ const ViewStats = () => {
                 }
             );
 
-            //if either wins or losses are null, that means the matchup hasn't happend, so set the stats to 0
-            if (response.data.wins == null || response.data.losses == null) {
-                setStats({wins: 0, losses: 0});
-            } else {
-                setStats(response.data);
+            // Get matchup stats for each character
+            const matchupStats = {};
+            for (const opponent of characters) {
+                const response = await axios.get(
+                    `${process.env.REACT_APP_API_URL}/api/character-stats`, {
+                        params: { 
+                            characterName: player1Selection.name,
+                            opponentCharacter: opponent.name 
+                        },
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        }
+                    }
+                );
+                
+                matchupStats[opponent.name] = {
+                    wins: response.data.wins || 0,
+                    losses: response.data.losses || 0
+                };
             }
+
+            setStats({
+                overall: {
+                    wins: overallResponse.data.wins || 0,
+                    losses: overallResponse.data.losses || 0
+                },
+                matchups: matchupStats
+            });
         }
     };
 
@@ -194,35 +208,28 @@ const ViewStats = () => {
                     )}
                     <button onClick={() => setPlayer1Selection(null)}>No Character</button>
                 </div>
-                
-                <div className="player-selection">
-                    <h3>Player 2</h3>
-                    {(player2Selection || player2Hover) ? (
+
+                <div className="character-stats">
+                    {player1Selection && (
                         <>
-                            <img 
-                                src={(player2Hover || player2Selection).image} 
-                                alt={(player2Hover || player2Selection).name} 
-                            />
-                            <h3>{(player2Hover || player2Selection).name}</h3>
-                        </>
-                    ) : (
-                        <>
-                            <img src={Ryu} alt="Ryu" />
-                            <h3 className="no-character">No selection</h3>
+                            <h2>{player1Selection.name} Stats</h2>
+                            <div className="overall-stats">
+                                <p>Overall: {stats.overall.wins}W - {stats.overall.losses}L</p>
+                            </div>
+                            <h3>Character Matchups:</h3>
+                            <div className="matchups-grid">
+                                {characters.map(char => (
+                                    <div key={char.id} className="matchup-item">
+                                        <p>Vs. {char.name}:</p>
+                                        <p>{stats.matchups[char.name]?.wins || 0}W - {stats.matchups[char.name]?.losses || 0}L</p>
+                                    </div>
+                                ))}
+                            </div>
                         </>
                     )}
-                    <button onClick={() => setPlayer2Selection(null)}>No Character</button>
                 </div>
             </div>
 
-            <div className="character-stats">
-                <h2>Character Stats</h2>
-                <p>Total Matches: {stats.wins + stats.losses}</p>
-                <p>Wins: {stats.wins}</p>
-                <p>Losses: {stats.losses}</p>
-                <p>Win Percentage: {((stats.wins / (stats.wins + stats.losses)) * 100 || 0).toFixed(2)}%</p>
-            </div>
-            
             <div className="character-select-grid">
                 {characters.map((char) => ( //map of characters and create a div for each one
                     <div key={char.id} className="character-slot">
@@ -235,14 +242,6 @@ const ViewStats = () => {
                     onStop={(e, data) => handleDragStop(1, e, data)}
                 >
                     <div className="player-cursor player1-cursor" />
-                </Draggable>
-                
-                <Draggable 
-                    defaultPosition={{x: 770, y: 0}}  // start at top right
-                    onDrag={(e, data) => handleDrag(2, e, data)}
-                    onStop={(e, data) => handleDragStop(2, e, data)}
-                >
-                    <div className="player-cursor player2-cursor" />
                 </Draggable>
             </div>
         </div>

@@ -157,7 +157,7 @@ label {
     display: flex;
     justify-content: space-between;
     margin: 20px auto;
-    width: 800px;
+    width: 1000px;
     gap: 40px;
 }
 
@@ -165,18 +165,18 @@ label {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 15px;
+    padding: 20px;
     background: #333;
     border: 3px solid #ffd700;
-    width: 350px;
+    width: 400px;
 }
 
 .player-selection img {
-    width: 200px;
-    height: 200px;
+    width: 300px;
+    height: 300px;
     object-fit: contain;
     background: #222;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
 }
 
 .player-selection h3 {
@@ -185,10 +185,79 @@ label {
     color: #ffd700;
     margin: 5px 0;
     text-align: center;
-    width: 100%;
 }
 
 .no-character {
     color: #666;
     font-style: italic;
+}
+
+.character-stats {
+    flex: 1;
+    padding: 20px;
+    background: #333;
+    border: 3px solid #ffd700;
+    height: 400px;
+    overflow-y: auto;
+}
+
+.character-stats h2 {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1.2rem;
+    color: #ffd700;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.character-stats h3 {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1rem;
+    color: #ffd700;
+    margin: 15px 0;
+}
+
+.character-stats p {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.8rem;
+    color: #ffffff;
+    margin: 8px 0;
+    padding: 5px;
+    border-bottom: 1px solid #444;
+}
+
+.character-stats::-webkit-scrollbar {
+    width: 8px;
+}
+
+.character-stats::-webkit-scrollbar-track {
+    background: #222;
+}
+
+.character-stats::-webkit-scrollbar-thumb {
+    background: #ffd700;
+    border-radius: 4px;
+}
+
+.character-stats::-webkit-scrollbar-thumb:hover {
+    background: #ffed4a;
+}
+
+.matchups-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    padding: 10px;
+}
+
+.matchup-item {
+    background: #222;
+    padding: 10px;
+    text-align: center;
+}
+
+.overall-stats {
+    background: #222;
+    padding: 15px;
+    margin-bottom: 20px;
+    text-align: center;
 }
