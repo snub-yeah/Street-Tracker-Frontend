@@ -133,7 +133,7 @@ const ViewStats = () => {
         if (isAuthenticated && player1Selection) {
             const token = await getAccessTokenSilently();
             
-            // Get overall stats first
+            // this will give total wins and losses
             const overallResponse = await axios.get(
                 `${process.env.REACT_APP_API_URL}/api/character-stats`, {
                     params: { characterName: player1Selection.name },
@@ -144,7 +144,7 @@ const ViewStats = () => {
                 }
             );
 
-            // Get matchup stats for each character
+            // loop thru each character and get the matchup stats
             const matchupStats = {};
             for (const opponent of characters) {
                 const response = await axios.get(
@@ -160,12 +160,14 @@ const ViewStats = () => {
                     }
                 );
                 
+                //create an array of objects for each character with the wins and losses
                 matchupStats[opponent.name] = {
                     wins: response.data.wins || 0,
                     losses: response.data.losses || 0
                 };
             }
 
+            //set the stats for the character to the matchups we created
             setStats({
                 overall: {
                     wins: overallResponse.data.wins || 0,
@@ -215,6 +217,8 @@ const ViewStats = () => {
                             <h2>{player1Selection.name} Stats</h2>
                             <div className="overall-stats">
                                 <p>Overall: {stats.overall.wins}W - {stats.overall.losses}L</p>
+                                <p>Win Rate: {stats.overall.wins + stats.overall.losses > 0 ? 
+                                    ((stats.overall.wins / (stats.overall.wins + stats.overall.losses)) * 100).toFixed(1) : 0}%</p>
                             </div>
                             <h3>Character Matchups:</h3>
                             <div className="matchups-grid">
@@ -222,6 +226,9 @@ const ViewStats = () => {
                                     <div key={char.id} className="matchup-item">
                                         <p>Vs. {char.name}:</p>
                                         <p>{stats.matchups[char.name]?.wins || 0}W - {stats.matchups[char.name]?.losses || 0}L</p>
+                                        {/* win rate. this could be calculated in separate variables but it's whatever */}
+                                        <p>{(stats.matchups[char.name]?.wins || 0) + (stats.matchups[char.name]?.losses || 0) > 0 ?
+                                            ((stats.matchups[char.name]?.wins / ((stats.matchups[char.name]?.wins || 0) + (stats.matchups[char.name]?.losses || 0))) * 100).toFixed(1) : 0}%</p>
                                     </div>
                                 ))}
                             </div>
