@@ -145,6 +145,8 @@ const ViewStats = () => {
             );
 
             // loop thru each character and get the matchup stats
+            // we're using for .. of instead of for .. in because that would give us the indices, while this will give us the entire
+            // object at that index. This makes it easy to get stuff like opponent.name straight thru the object.
             const matchupStats = {};
             for (const opponent of characters) {
                 const response = await axios.get(

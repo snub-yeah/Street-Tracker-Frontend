@@ -17,8 +17,11 @@ import FeiLong from './images/feilong.gif';
 import Deejay from './images/deejay.gif';
 import Cammy from './images/cammy.gif';
 import MBison from './images/mbison.gif';
+import axios from 'axios';
+import { useAuth0 } from '@auth0/auth0-react';
 
 const MatchCard = ({ match }) => {
+    const { getAccessTokenSilently } = useAuth0();
     const characters = [
         {id: 1, name: "Ryu", image: Ryu},
         {id: 2, name: "E. Honda", image: Honda},
@@ -54,6 +57,15 @@ const MatchCard = ({ match }) => {
         return result <= 2 ? 'result-win' : 'result-loss';
     };
 
+    const handleEditMatch = async () => {
+        console.log(match);
+        
+    };
+
+    const handleDeleteMatch = (matchId) => {
+        console.log(`Deleting match with id: ${matchId}`);
+    };
+
     // find the images of characters based on their name
     const userCharImage = characters.find(char => char.name === match.userCharacter).image;
     const oppCharImage = characters.find(char => char.name === match.opponentCharacter).image;
@@ -70,6 +82,8 @@ const MatchCard = ({ match }) => {
             <p className={`${getResultClass(match.result)}`}>
                 Result: {getResultText(match.result)}
             </p>
+            <button onClick={() => handleEditMatch(match.id)}>Edit</button>
+            <button onClick={() => handleDeleteMatch(match.id)}>Delete</button>
         </div>
     );
 };
