@@ -9,6 +9,8 @@
     width: 300px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     transition: transform 0.2s;
+    position: relative;
+    z-index: 1;
 }
 
 .match-card:hover {

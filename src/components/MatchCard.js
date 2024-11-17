@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Styles/MatchCard.css';
 // import all character images
 import Ryu from './images/ryu.gif';
@@ -18,10 +18,12 @@ import Deejay from './images/deejay.gif';
 import Cammy from './images/cammy.gif';
 import MBison from './images/mbison.gif';
 import axios from 'axios';
+import ConfirmDelete from './ConfirmDelete';
 import { useAuth0 } from '@auth0/auth0-react';
 
 const MatchCard = ({ match }) => {
     const { getAccessTokenSilently } = useAuth0();
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const characters = [
         {id: 1, name: "Ryu", image: Ryu},
         {id: 2, name: "E. Honda", image: Honda},
@@ -59,11 +61,25 @@ const MatchCard = ({ match }) => {
 
     const handleEditMatch = async () => {
         console.log(match);
-        
     };
 
     const handleDeleteMatch = (matchId) => {
-        console.log(`Deleting match with id: ${matchId}`);
+        setIsDeleteModalOpen(true);
+    };
+
+    const handleConfirmDelete = async () => {
+        // try {
+        //     const token = await getAccessTokenSilently();
+        //     await axios.delete(`${process.env.REACT_APP_API_URL}/matches/${match.id}`, {
+        //         headers: {
+        //             Authorization: `Bearer ${token}`
+        //         }
+        //     });
+        //     // You might want to add some callback here to refresh the matches list
+        // } catch (error) {
+        //     console.error('Error deleting match:', error);
+        // }
+        setIsDeleteModalOpen(false);
     };
 
     // find the images of characters based on their name
@@ -72,6 +88,11 @@ const MatchCard = ({ match }) => {
 
     return (
         <div className="match-card">
+            <ConfirmDelete 
+                isOpen={isDeleteModalOpen} 
+                onClose={() => setIsDeleteModalOpen(false)}
+                onConfirm={handleConfirmDelete}
+            />
             <div className="character-images">
                 <img className="character-image" src={userCharImage} alt={match.userCharacter || 'User Character'} />
                 <img className="character-image" src={oppCharImage} alt={match.opponentCharacter || 'Opponent Character'} />
