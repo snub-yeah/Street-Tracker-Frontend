@@ -9,22 +9,19 @@ const ViewMatch = () => {
     const { user, isAuthenticated, isLoading, getAccessTokenSilently } = useAuth0();
     const [matches, setMatches] = useState([]);
     const [totalMatches, setTotalMatches] = useState(0);
+    const [refreshTrigger, setRefreshTrigger] = useState(0);
 
     useEffect(() => {
         const fetchMatches = async () => {
             if (isAuthenticated) {
                 try {
                     const token = await getAccessTokenSilently();
-                    //set a response variable with all the returned matches
                     const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/matches`, {
                         headers: {
-                            //add our auth token
                             Authorization: `Bearer ${token}`,
                             'Content-Type': 'application/json'
                         }
                     });
-
-                    //this request returns a map of string and object
                     setMatches(response.data.matches);
                     setTotalMatches(response.data.totalMatches);
                 } catch (error) {
@@ -34,7 +31,11 @@ const ViewMatch = () => {
         };
         
         fetchMatches();
-    }, [isAuthenticated, getAccessTokenSilently]);
+    }, [isAuthenticated, getAccessTokenSilently, refreshTrigger]);
+
+    const refreshMatches = () => {
+        setRefreshTrigger(prev => prev + 1);
+    };
 
     if (isLoading) {
         return <div>Loading...</div>;
@@ -52,7 +53,10 @@ const ViewMatch = () => {
             <h2 className="matches-subtitle">Total Matches: {totalMatches}</h2>
             <div className="matches-grid">
                 {matches.map(match => (
-                    <MatchCard key={match.match_id} match={match} />
+                    <MatchCard 
+                        key={match.match_id} 
+                        match={{...match, onMatchDeleted: refreshMatches}} 
+                    />
                 ))}
             </div>
         </div>

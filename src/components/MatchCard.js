@@ -63,22 +63,25 @@ const MatchCard = ({ match }) => {
         console.log(match);
     };
 
-    const handleDeleteMatch = (matchId) => {
+    const handleDeleteMatch = () => {
         setIsDeleteModalOpen(true);
     };
 
     const handleConfirmDelete = async () => {
-        // try {
-        //     const token = await getAccessTokenSilently();
-        //     await axios.delete(`${process.env.REACT_APP_API_URL}/matches/${match.id}`, {
-        //         headers: {
-        //             Authorization: `Bearer ${token}`
-        //         }
-        //     });
-        //     // You might want to add some callback here to refresh the matches list
-        // } catch (error) {
-        //     console.error('Error deleting match:', error);
-        // }
+        try {
+            const token = await getAccessTokenSilently();
+            await axios.delete(`${process.env.REACT_APP_API_URL}/api/matches/${match.match_id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            // refresh the matches list
+            if (match.onMatchDeleted) {
+                match.onMatchDeleted();
+            }
+        } catch (error) {
+            console.error('Error deleting match:', error);
+        }
         setIsDeleteModalOpen(false);
     };
 
