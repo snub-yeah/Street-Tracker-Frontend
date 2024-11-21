@@ -19,11 +19,13 @@ import Cammy from './images/cammy.gif';
 import MBison from './images/mbison.gif';
 import axios from 'axios';
 import ConfirmDelete from './ConfirmDelete';
+import EditMatch from './EditMatch';
 import { useAuth0 } from '@auth0/auth0-react';
 
 const MatchCard = ({ match }) => {
     const { getAccessTokenSilently } = useAuth0();
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const characters = [
         {id: 1, name: "Ryu", image: Ryu},
         {id: 2, name: "E. Honda", image: Honda},
@@ -60,7 +62,7 @@ const MatchCard = ({ match }) => {
     };
 
     const handleEditMatch = async () => {
-        console.log(match);
+        setIsEditModalOpen(true);
     };
 
     const handleDeleteMatch = () => {
@@ -95,6 +97,11 @@ const MatchCard = ({ match }) => {
                 isOpen={isDeleteModalOpen} 
                 onClose={() => setIsDeleteModalOpen(false)}
                 onConfirm={handleConfirmDelete}
+            />
+            <EditMatch 
+                isOpen={isEditModalOpen}
+                onClose={() => setIsEditModalOpen(false)}
+                match={match}
             />
             <div className="character-images">
                 <img className="character-image" src={userCharImage} alt={match.userCharacter || 'User Character'} />
