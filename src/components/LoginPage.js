@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useNavigate } from 'react-router-dom';
+import ZangiefSpin from './images/zangief-spinning.gif';
+import './Styles/AddMatch.css';
 
 const LoginPage = () => {
     const { loginWithRedirect, isAuthenticated, user, isLoading, error, getAccessTokenSilently } = useAuth0();
@@ -36,7 +38,7 @@ const LoginPage = () => {
     }, [isAuthenticated, user, navigate, getAccessTokenSilently]);
 
     if (isLoading) {
-        return <div>Loading...</div>;
+        return <div><h1 className="page-title">Redirecting...</h1><img style={{ width: '600px', height: '600px', alignItems: 'center' }} src={ZangiefSpin} alt="Zangief Spin" /></div>;
     }
 
     if (error) {
@@ -52,7 +54,7 @@ const LoginPage = () => {
         );
     }
 
-    return <div>Redirecting...</div>;
+    return <div><h1 className="page-title">Redirecting...</h1><img style={{ width: '600px', height: '600px', alignItems: 'center' }} src={ZangiefSpin} alt="Zangief Spin" /></div>;
 };
 
 export default LoginPage;

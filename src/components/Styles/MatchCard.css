@@ -10,12 +10,9 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     transition: transform 0.2s;
     position: relative;
-    z-index: 1;
+    z-index: auto;
 }
 
-.match-card:hover {
-    transform: translateY(-5px);
-}
 
 .match-card p {
     color: #ffffff;
